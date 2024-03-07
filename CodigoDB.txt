@@ -1,0 +1,47 @@
+ALTER TABLE Alumnos_Curso_Aula ADD FOREIGN KEY(Id_Alumno) REFERENCES Alumnos_Curso(Alumno_ID);
+ALTER TABLE Alumnos_Curso_Aula ADD FOREIGN KEY(Id_Curso) REFERENCES Alumnos_Curso(Curso_ID);
+ALTER TABLE Alumnos_Curso_Aula ADD FOREIGN KEY(Aula_Id) REFERENCES Aula(Id_Aula);
+Select*from Alumnos;
+--Select Distinct
+select distinct Direccion from Alumnos;
+select distinct Apellido from Alumnos;
+--Select Where
+select * from Curso
+where Modalidad ='Presencial';
+-- Operador Like
+select * from Alumnos
+where Direccion Like 'San%';
+--Mostrar todo los regustron con dominio gmail
+select * from Alumnos
+where Email like '%@gmail.com';
+--
+select * from Alumnos
+where Apellido like 'M%';
+select * from Alumnos
+where Direccion Like '_____MariaTriunfo';
+--Select Order By
+select * from Alumnos
+order by Dni ;
+--Select and , or 
+Select * from Alumnos
+where Apellido like 'M%' and Dni like '8%'
+Select * from Alumnos
+where Apellido like 'M%' or Telefono like '8%'
+--select not
+select *from Alumnos
+where not Direccion = 'Surco'
+--
+select * from Curso
+--Uso de update
+update Curso set Duracion_semanas =5
+Where Id='C01';
+
+--Modificar la modalidad
+update Curso set Modalidad='Virtual'
+where Id='C01';
+
+insert into Curso values('C06','Data Bases',20,'Hibrido')
+--Elimnar registro
+delete from Curso 
+where Id ='C06';
+
