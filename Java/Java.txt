@@ -1,0 +1,21 @@
+Crear una Arreglo:
+tipo[] nombre=new tipo[longitud];
+Ordenar de menor a mayor:
+Array.sort(lista);
+De forma descendente:
+Import java.util.Collections;
+Array.sort(lista,Collections.reverseOrder());
+Obtener el indice de un elemnto:
+int indice =Arrays.binarySeach(numeros,"Elemento")
+Fibonacci:
+ int a,b,c,x;
+        x=10;
+        a=0;
+        b=1;
+        c=0;
+       
+        for(int i=1;i<=x;i++ ){
+            System.out.println(a);// 0 1 1 2 3 5 
+            c = a; // 0  1 1 2  3  5 
+            a = b + c; // 1 1 2 3 5 8 
+            b = c; // 0  1 1 2 3  5
