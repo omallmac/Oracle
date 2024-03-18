@@ -7,6 +7,7 @@ Import java.util.Collections;
 Array.sort(lista,Collections.reverseOrder());
 Obtener el indice de un elemnto:
 int indice =Arrays.binarySeach(numeros,"Elemento")
+Crear lista sin especificar la cantidad:ArrayList<Integer> numerosPrimos = new ArrayList<>();
 Fibonacci:
  int a,b,c,x;
         x=10;
