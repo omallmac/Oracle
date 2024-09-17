@@ -1,0 +1,92 @@
+roles.php
+<?php
+// Conexión a la base de datos
+$conn = new mysqli('localhost', 'root', 'Antonio12862437227', 'roles');
+
+// Verificar la conexión
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
+}
+
+// Cargar los roles
+$sql = "SELECT id_rol, rol_name FROM role";
+$result = $conn->query($sql);
+?>
+
+<!-- HTML para el select de roles -->
+<form method="POST" id="roleForm">
+    <label for="role">Seleccionar Rol:</label>
+    <select id="role" name="role" onchange="this.form.submit()">
+        <option value="">-- Selecciona un Rol --</option>
+        <?php while($row = $result->fetch_assoc()) { ?>
+            <option value="<?php echo $row['id_rol']; ?>">
+                <?php echo $row['rol_name']; ?>
+            </option>
+        <?php } ?>
+    </select>
+</form>
+<?php
+if (isset($_POST['role']) && !empty($_POST['role'])) {
+    $id_rol = $_POST['role'];
+
+    // Consultar las opciones y sus ítems para el rol seleccionado
+    $sql = "
+    SELECT o.option_name, i.name_item, oi.id_option_item, 
+           CASE WHEN roi.id_rol IS NOT NULL THEN 1 ELSE 0 END AS tiene_permiso
+    FROM opcion o
+    JOIN option_item oi ON o.id_option = oi.id_option
+    JOIN item i ON oi.id_item = i.id_item
+    LEFT JOIN role_option_item roi ON roi.id_option_item = oi.id_option_item AND roi.id_rol = $id_rol
+    ";
+    
+    $result = $conn->query($sql);
+
+    // Mostrar opciones e ítems con checkboxes
+    echo '<form method="POST" action="guardar_permisos.php">';
+    echo '<input type="hidden" name="role" value="' . $id_rol . '">';
+    
+    $current_option = '';
+    while($row = $result->fetch_assoc()) {
+        if ($current_option != $row['option_name']) {
+            // Nueva opción (header)
+            $current_option = $row['option_name'];
+            echo "<h3>{$current_option}</h3>";
+        }
+        // Mostrar ítem con checkbox
+        $checked = ($row['tiene_permiso']) ? 'checked' : '';
+        echo "<label><input type='checkbox' name='items[]' value='{$row['id_option_item']}' {$checked}> {$row['name_item']}</label><br>";
+    }
+
+    echo '<button type="submit">Guardar Cambios</button>';
+    echo '</form>';
+}
+?>
+------------------------------guardar_permisos.php
+<?php
+// Conexión a la base de datos
+$conn = new mysqli('localhost', 'root', 'Antonio12862437227', 'roles');
+
+// Verificar la conexión
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
+}
+
+if (isset($_POST['role'])) {
+    $id_rol = $_POST['role'];
+
+    // Limpiar todos los permisos del rol actual
+    $sql_delete = "DELETE FROM role_option_item WHERE id_rol = $id_rol";
+    $conn->query($sql_delete);
+
+    // Insertar los permisos seleccionados (items seleccionados)
+    if (isset($_POST['items']) && !empty($_POST['items'])) {
+        foreach ($_POST['items'] as $id_option_item) {
+            $sql_insert = "INSERT INTO role_option_item (id_rol, id_option_item) VALUES ($id_rol, $id_option_item)";
+            $conn->query($sql_insert);
+        }
+    }
+
+    // Redirigir de vuelta a roles.php
+    header("Location: roles.php?role=$id_rol");
+}
+?>
