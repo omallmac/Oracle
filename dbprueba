@@ -1,0 +1,103 @@
+create table role(
+id_rol int primary key,
+rol_name varchar(50) not null
+);
+
+create table opcion(
+id_option int primary key,
+option_name varchar(50) not null
+);
+
+create table item(
+id_item int primary key ,
+url_item varchar(50),
+label_item varchar(50),
+class_item varchar(50),
+name_item varchar(50)
+);
+
+create table option_item(
+id_option_item int primary key,
+id_option int not null,
+id_item int not null,
+foreign key (id_option) references opcion(id_option),
+foreign key (id_item) references item(id_item)
+);
+
+create table role_option_item(
+id_roi int primary key,
+id_rol int not null,
+id_option_item int not null,
+foreign key (id_rol) references role(id_rol),
+foreign key (id_option_item)references option_item(id_option_item)
+);
+
+select * from role;
+insert into item (id_item,url_item,label_item,class_item,name_item) values
+(1,'x','x','x','User_list'),
+(2,'x','x','x','User_add'),
+(3,'x','x','x','User_delete'),
+(4,'x','x','x','User_update'),
+(5,'x','x','x','Curso_list'),
+(6,'x','x','x','Curso_add'),
+(7,'x','x','x','Curso_delete'),
+(8,'x','x','x','Curso_update'),
+(9,'x','x','x','Key'),
+(10,'x','x','x','Configuraciones'),
+(11,'x','x','x','Edit_portal'),
+(12,'x','x','x','Forms'),
+(13,'x','x','x','Web'),
+(14,'x','x','x','DataBase'),
+(15,'x','x','x','Testing'),
+(16,'x','x','x','Limpiar_Cache');
+
+insert into option_item(id_option_item,id_option,id_item)values
+(1,1,1),
+(2,1,2),
+(3,1,3),
+(4,1,4),
+(5,2,5),
+(6,2,6),
+(7,2,7),
+(8,2,8),
+(9,3,9),
+(10,3,10),
+(11,3,11),
+(12,3,12),
+(13,4,13),
+(14,4,14),
+(15,4,15),
+(16,4,16);
+select * from role_option_item;
+insert into role_option_item(id_roi,id_rol,id_option_item) values
+(1,1,1),
+(2,1,5),
+(3,2,1),
+(4,2,5),
+(5,2,8),
+(6,3,1),
+(7,3,2),
+(8,3,3),
+(9,3,4),
+(10,3,5),
+(11,3,6),
+(12,3,7),
+(13,3,8),
+(14,3,9),
+(15,3,10),
+(16,3,11),
+(17,3,12),
+(18,3,13),
+(19,3,14),
+(20,3,15),
+(21,3,16);
+
+SELECT roi.id_roi, r.rol_name, o.option_name, i.name_item
+FROM role r
+JOIN role_option_item roi ON r.id_rol = roi.id_rol
+JOIN option_item oi ON roi.id_option_item = oi.id_option_item
+JOIN item i ON oi.id_item = i.id_item
+JOIN opcion o ON oi.id_option = o.id_option
+WHERE r.rol_name = 'Alumno';
+
+SHOW CREATE TABLE role_option_item;
